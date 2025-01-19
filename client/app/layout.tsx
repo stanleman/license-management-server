@@ -47,7 +47,7 @@ export default function RootLayout({
         className={`${montserrat.className} antialiased bg-[#181C1F] flex h-screen`}
       >
         <Sidebar items={sidebarItems} />
-        <main className="flex-1 p-4">{children}</main>
+        {children}
       </body>
     </html>
   );
