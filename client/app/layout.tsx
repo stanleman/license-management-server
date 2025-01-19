@@ -32,6 +32,7 @@ export default function RootLayout({
   const adminItems = [
     { label: "Statistics", href: "/admin/statistics" },
     { label: "License Analysis", href: "/admin/license_analysis" },
+    { label: "Activities List", href: "/admin/activities_list" },
   ];
 
   const sidebarItems =
@@ -44,7 +45,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${montserrat.className} antialiased bg-[#181C1F] flex h-screen`}
+        className={`${montserrat.className} antialiased bg-[#181C1F] flex`}
       >
         <Sidebar items={sidebarItems} />
         {children}
