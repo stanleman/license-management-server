@@ -18,7 +18,7 @@ const Sidebar: React.FC<SidebarProps> = ({ items }) => {
   const router = useRouter();
 
   return (
-    <aside className="w-64 h-full bg-[#212529] text-white">
+    <aside className="w-64 h-screen bg-[#212529] text-white sticky top-0 border-r border-[#2D3237]">
       <div className="p-4 text-xl font-bold ">LMS</div>
       <nav className="mt-4">
         <ul>
