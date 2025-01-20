@@ -17,7 +17,11 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   let userLevel = "admin";
+=========
+  let userLevel = "operator";
+>>>>>>>>> Temporary merge branch 2
 
   const OEMODMItems = [
     { label: "Request", href: "/oem_odm/request_dashboard" },
