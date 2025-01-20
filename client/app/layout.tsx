@@ -17,7 +17,9 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   let userLevel = "admin";
+
 
   const OEMODMItems = [
     { label: "Request", href: "/oem_odm/request_dashboard" },
