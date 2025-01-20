@@ -17,7 +17,9 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  let userLevel = "operator";
+
+  let userLevel = "admin";
+
 
   const OEMODMItems = [
     { label: "Request", href: "/oem_odm/request_dashboard" },
@@ -32,19 +34,20 @@ export default function RootLayout({
   const adminItems = [
     { label: "Statistics", href: "/admin/statistics" },
     { label: "License Analysis", href: "/admin/license_analysis" },
+    { label: "Activities List", href: "/admin/activities_list" },
   ];
 
   const sidebarItems =
     userLevel === "admin"
       ? adminItems
       : userLevel === "operator"
-      ? operatorItems
-      : OEMODMItems;
+        ? operatorItems
+        : OEMODMItems;
 
   return (
     <html lang="en">
       <body
-        className={`${montserrat.className} antialiased bg-[#181C1F] flex h-screen`}
+        className={`${montserrat.className} antialiased bg-[#181C1F] flex`}
       >
         <Sidebar items={sidebarItems} />
         {children}
