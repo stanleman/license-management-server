@@ -39,14 +39,12 @@ export default function RootLayout({
     userLevel === "admin"
       ? adminItems
       : userLevel === "operator"
-        ? operatorItems
-        : OEMODMItems;
+      ? operatorItems
+      : OEMODMItems;
 
   return (
     <html lang="en">
-      <body
-        className={`${montserrat.className} antialiased bg-[#181C1F] flex`}
-      >
+      <body className={`${montserrat.className} antialiased bg-[#181C1F] flex`}>
         <Sidebar items={sidebarItems} />
         {children}
       </body>
