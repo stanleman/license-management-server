@@ -1,5 +1,7 @@
 from flask import Flask
 from flask_cors import CORS
+from flask_jwt_extended import JWTManager
+from flask_bcrypt import Bcrypt
 from mongoengine import connect
 from dotenv import load_dotenv
 
@@ -9,6 +11,11 @@ def create_app():
     load_dotenv()
     app = Flask(__name__)
 
+    app.config["SECRET_KEY"] = os.getenv("FLASK_SECRET_KEY", "LMS")
+
+    bcrypt = Bcrypt(app)
+    jwt = JWTManager(app)
+
     # MongoDB Connection
     connect(db=os.getenv('PG_DATABASE', 'license-db'), 
             host=os.getenv('PG_HOST', 'localhost'), 
@@ -16,11 +23,9 @@ def create_app():
 
     CORS(app)
 
-    # Register Blueprints
-    # from app.routes.items import items_bp
-    # from app.routes.users import users_bp
+    from app.routes import blueprints
 
-    # app.register_blueprint(items_bp)
-    # app.register_blueprint(users_bp)
+    for bp, url_prefix in blueprints:
+        app.register_blueprint(bp, url_prefix=url_prefix)
 
     return app
