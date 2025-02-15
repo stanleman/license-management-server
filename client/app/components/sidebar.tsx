@@ -13,6 +13,7 @@ const Sidebar: React.FC = () => {
   useEffect(() => {
     try {
       const storedRole = localStorage.getItem("role");
+
       if (storedRole) {
         setUserRole(storedRole);
       }
@@ -43,6 +44,7 @@ const Sidebar: React.FC = () => {
 
   const handleSignOut = () => {
     localStorage.removeItem("role");
+    localStorage.removeItem("token");
     router.push("/login");
   };
 
