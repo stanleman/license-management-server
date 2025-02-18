@@ -33,6 +33,15 @@ def create_license():
         "approved": license.approved.value
     }), 201
 
+@license_bp.route("/", methods=["GET"])
+@jwt_required()
+def get_all_licenses():
+    licenses = License.objects.all()  
+    
+    licenses_json = [license.to_mongo().to_dict() for license in licenses]
+
+    return jsonify(licenses_json), 200
+
 @license_bp.route('/<license_id>/status', methods=['PUT'])
 @jwt_required()
 def update_license_status(license_id):
