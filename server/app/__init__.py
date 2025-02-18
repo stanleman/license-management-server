@@ -12,6 +12,8 @@ def create_app():
     app = Flask(__name__)
 
     app.config["SECRET_KEY"] = os.getenv("FLASK_SECRET_KEY", "LMS")
+    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = 3600  
+    app.config["JWT_REFRESH_TOKEN_EXPIRES"] = 86400
 
     bcrypt = Bcrypt(app)
     jwt = JWTManager(app)

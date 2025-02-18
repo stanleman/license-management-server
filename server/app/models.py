@@ -14,7 +14,7 @@ class LicenseType(Enum):
 class LicenseStatus(Enum):
     PENDING = 'pending'
     APPROVED = 'approved'
-    ISSUED = 'issued'
+    REJECTED = 'rejected'
 
 class Feature(EmbeddedDocument):
     name = StringField(required=True)
@@ -39,4 +39,4 @@ class License(Document):
     notes = StringField(required=True)
     operator = ReferenceField(User, required=True)
     approved = EnumField(LicenseStatus, required=True, default=LicenseStatus.PENDING)
-    created_at = DateTimeField(default=lambda: datetime.now(datetime.timezone.utc))
+    created_at = DateTimeField(default=datetime.utcnow)

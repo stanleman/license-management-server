@@ -7,7 +7,6 @@ auth_bp = Blueprint('auth', __name__)
 
 SECRET_KEY = 'LMS'
 
-
 @auth_bp.route("/register", methods=["POST"])
 def register():
     data = request.json
