@@ -36,9 +36,27 @@ def create_license():
 @license_bp.route("/", methods=["GET"])
 @jwt_required()
 def get_all_licenses():
-    licenses = License.objects.all()  
-    
-    licenses_json = [license.to_mongo().to_dict() for license in licenses]
+    licenses = License.objects.all()
+
+    licenses_json = []
+    for license in licenses:
+        license_dict = license.to_mongo().to_dict()
+
+        license_dict["_id"] = str(license_dict["_id"])  
+        license_dict["operator"] = str(license_dict["operator"])  
+
+        operator = User.objects(id=license.operator.id).first()
+        if operator:
+            license_dict["operator"] = {
+                "id": str(operator.id),
+                "name": operator.name,
+                "email": operator.email,
+                "role": operator.role.value
+            }
+
+        license_dict["features"] = [{"name": feature.name} for feature in license.features]
+
+        licenses_json.append(license_dict)
 
     return jsonify(licenses_json), 200
 
