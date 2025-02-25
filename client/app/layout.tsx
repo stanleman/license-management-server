@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import Sidebar from "./components/sidebar";
 import "./globals.css";
+import { ToastContainer } from 'react-toastify';
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -22,6 +23,7 @@ export default function RootLayout({
       <body className={`${montserrat.className} antialiased bg-[#181C1F] flex`}>
         <Sidebar />
         {children}
+        <ToastContainer theme="dark"/>
       </body>
     </html>
   );

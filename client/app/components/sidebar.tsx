@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
+import { toast } from "react-toastify";
 
 const Sidebar: React.FC = () => {
   const [userRole, setUserRole] = useState<string | null>(null);
@@ -45,6 +46,7 @@ const Sidebar: React.FC = () => {
   const handleSignOut = () => {
     localStorage.removeItem("role");
     localStorage.removeItem("token");
+    toast("Logged out successfully.",{type: 'success'})
     router.push("/login");
   };
 

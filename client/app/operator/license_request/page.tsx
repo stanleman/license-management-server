@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { MultiValue } from "react-select";
 import { customStyles, OptionType } from "@/app/components/multiSelectStyle";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 const Select = dynamic(() => import("react-select"), {
   ssr: false,
@@ -17,9 +19,60 @@ const options: OptionType[] = [
 ];
 
 export default function LicenseRequest() {
+  const router = useRouter();
   const [selectedOptions, setSelectedOptions] = useState<
     MultiValue<OptionType>
   >([]);
+
+  useEffect(() => {
+    setFormData({ ...formData, "features": selectedOptions.map((option) => option.value) });
+  }, [selectedOptions])
+
+  const [formData, setFormData] = useState({
+    title: "",
+    duration_in_months: 0,
+    type: "",
+    features: [] as string[],
+    notes: ""
+  });
+
+  useEffect(() => {
+    console.log(formData)
+  }, [formData])
+
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    const apiUrl = `http://127.0.0.1:5000/license/`;
+
+    try {
+      const response = await fetch(apiUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${localStorage.getItem('token')}`,
+        },
+        body: JSON.stringify(formData),
+      });
+      const data = await response.json();
+
+      if (!response.ok) throw new Error(data.error || "Something went wrong");
+
+      router.push("/operator/approval_tracker");
+      toast("License request submitted.", {type: 'success'})
+    } catch (err: any) {
+      toast(err.message, {type:"error"});
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <main className="text-[#E9E9E9] w-full">
@@ -31,35 +84,33 @@ export default function LicenseRequest() {
       </div>
 
       <div className="w-full px-6">
-        <form className="bg-[#212529] shadow-md rounded-lg px-8 pt-6 pb-8 mb-4">
+        <form className="bg-[#212529] shadow-md rounded-lg px-8 pt-6 pb-8 mb-4" onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="block text-white text-sm mb-2">Title</label>
             <input
               className="shadow bg-[#181C1F] rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline"
-              type="text"
+              type="text" name="title" onChange={handleChange} value={formData.title} required
             />
           </div>
 
           <div className="mb-4">
-            <label className="block text-white text-sm mb-2">Duration</label>
+            <label className="block text-white text-sm mb-2">Duration (months)</label>
             <input
               className="shadow bg-[#181C1F] rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline"
-              type="text"
+              type="number" name="duration_in_months" onChange={handleChange} value={formData.duration_in_months} required
             />
           </div>
 
           <div className="mb-4">
             <label className="block text-white text-sm mb-2">Type</label>
             <select
-              defaultValue={"Select a type"}
-              className="shadow  bg-[#181C1F] text-white rounded w-full py-2 px-3 focus:ring-[#BCE29E]"
+              className="shadow bg-[#181C1F] text-white rounded w-full py-2 px-3 focus:ring-[#BCE29E]"
+              name="type" onChange={handleChange} value={formData.type} required
             >
-              <option disabled>Select a type</option>
-              <option value="title1" className="">
-                Type 1
+              <option disabled value="">Select a type</option>
+              <option value="manufacturing">
+                Manufacturing
               </option>
-              <option value="title2">Type 2</option>
-              <option value="title3">Type 3</option>
             </select>
           </div>
 
@@ -73,6 +124,7 @@ export default function LicenseRequest() {
               styles={customStyles as any}
               className="text-black"
               placeholder="Select a feature"
+              required
             />
           </div>
 
@@ -81,15 +133,19 @@ export default function LicenseRequest() {
             <textarea
               rows={4}
               className="shadow bg-[#181C1F] rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline"
+              name="notes"
+              onChange={handleChange}
+              value={formData.notes}
+              required
             />
           </div>
 
           <div className="flex items-center justify-between mt-5">
             <button
               className="bg-white hover:bg-white/80 text-[#181C1F] font-semibold py-2 px-6 rounded"
-              type="button"
+              type="submit"
             >
-              Submit
+              {!loading? "Submit": "Loading..."}
             </button>
           </div>
         </form>

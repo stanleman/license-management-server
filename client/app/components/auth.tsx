@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 export default function AuthPage({ type }: { type: "login" | "register" }) {
   const router = useRouter();
@@ -38,8 +39,10 @@ export default function AuthPage({ type }: { type: "login" | "register" }) {
       if (type === "login") {
         localStorage.setItem("token", data.access_token);
         localStorage.setItem("role", data.role);
+        toast(`Logged in as ${formData.email}!`, {'type': 'success'})
         router.push("/");
       } else {
+        toast(`Signed up with ${formData.email}! Please login now.`, {'type': 'success'})
         router.push("/login");
       }
     } catch (err: any) {
